@@ -62,7 +62,11 @@ if ! command -v pm2 &> /dev/null; then
 fi
 
 # Clone or update repository
-if [ -d "Lamhey" ]; then
+if [ -f "package.json" ] && [ -d "client" ] && [ -d "server" ]; then
+    # Already in the project directory
+    print_status "Already in project directory, updating repository..."
+    git pull origin main
+elif [ -d "Lamhey" ]; then
     print_status "Updating existing repository..."
     cd Lamhey
     git pull origin main
