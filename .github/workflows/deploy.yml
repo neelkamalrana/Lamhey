@@ -20,6 +20,11 @@ jobs:
         script: |
           cd /home/ubuntu/Lamhey
           git pull origin main
+          # Clear any cached builds
+          rm -rf client/build
+          rm -rf node_modules
+          rm -rf client/node_modules
+          rm -rf server/node_modules
           npm run install:all
           npm run build:all
           pm2 restart lamhey
