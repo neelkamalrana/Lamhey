@@ -19,14 +19,20 @@ jobs:
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
           cd /home/ubuntu/Lamhey
+          echo "Starting deployment..."
           git pull origin main
-          # Clear any cached builds
+          echo "Git pull completed"
+          # Clear only build cache, keep node_modules for faster installs
           rm -rf client/build
-          rm -rf node_modules
-          rm -rf client/node_modules
-          rm -rf server/node_modules
+          echo "Build cache cleared"
           npm run install:all
+          echo "Dependencies installed"
           npm run build:all
+          echo "Build completed"
           pm2 restart lamhey
+          echo "PM2 restarted"
+          pm2 status
+          echo "PM2 status checked"
           sudo systemctl reload nginx
+          echo "Nginx reloaded"
           echo "Deployment completed successfully!"
