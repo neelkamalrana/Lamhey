@@ -11,9 +11,11 @@ const Dashboard: React.FC = () => {
   console.log('Dashboard render:', { user, isAuthenticated, isLoading });
 
   useEffect(() => {
-    if (!isLoading && !isAuthenticated) {
-      window.location.href = '/';
-    }
+    // Temporarily disable redirect for debugging
+    console.log('Dashboard useEffect:', { isLoading, isAuthenticated });
+    // if (!isLoading && !isAuthenticated) {
+    //   window.location.href = '/';
+    // }
   }, [isAuthenticated, isLoading]);
 
   if (isLoading) {
@@ -27,9 +29,10 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  if (!isAuthenticated) {
-    return null; // Will redirect via useEffect
-  }
+  // Temporarily show dashboard even if not authenticated for debugging
+  // if (!isAuthenticated) {
+  //   return null; // Will redirect via useEffect
+  // }
 
   return (
     <div className="container">
