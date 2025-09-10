@@ -88,6 +88,10 @@ app.get('/test.html', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/public', 'test.html'));
 });
 
+app.get('/simple-test.html', (req, res) => {
+  res.sendFile(path.join(__dirname, '../simple-test.html'));
+});
+
 // Catch all handler: send back React's index.html file for client-side routing
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
