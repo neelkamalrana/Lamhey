@@ -34,6 +34,17 @@ jobs:
           echo "BUILD_TIMESTAMP=$(date)" > client/.env.local
           npm run build:all
           echo "Build completed"
+          # Verify build files exist
+          echo "Checking build files..."
+          ls -la client/build/
+          echo "Build files listed"
+          # Check if index.html exists
+          if [ -f "client/build/index.html" ]; then
+            echo "✅ index.html exists"
+          else
+            echo "❌ index.html missing!"
+            exit 1
+          fi
           pm2 restart lamhey
           echo "PM2 restarted"
           pm2 status
