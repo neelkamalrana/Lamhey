@@ -83,6 +83,15 @@ app.get('/api/data', (req, res) => {
 // Serve static files from public directory
 app.use('/static', express.static(path.join(__dirname, '../client/public')));
 
+// Test route to verify server is working
+app.get('/test-server', (req, res) => {
+  res.json({
+    message: 'Server is working!',
+    timestamp: new Date().toISOString(),
+    version: 'VERSION 5'
+  });
+});
+
 // Catch all handler: send back React's index.html file for client-side routing
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
