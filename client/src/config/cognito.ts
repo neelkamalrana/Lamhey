@@ -32,8 +32,20 @@ function resolveHostedBaseUrl(): string {
 
 // Function to get Cognito Hosted UI URL
 export const getCognitoHostedUIUrl = (): string => {
-	// Return the hardcoded URL from environment variables
-	return cognitoConfig.hostedUIUrl;
+	// If we have a hardcoded URL, use it
+	if (cognitoConfig.hostedUIUrl) {
+		return cognitoConfig.hostedUIUrl;
+	}
+	
+	// Otherwise, build the URL dynamically
+	const baseUrl = `https://${cognitoConfig.hostedUIDomainHost}`;
+	const params = new URLSearchParams({
+		client_id: cognitoConfig.clientId,
+		response_type: cognitoConfig.responseType,
+		scope: cognitoConfig.scope.join(' '),
+		redirect_uri: cognitoConfig.hostedUIRedirectSignIn
+	});
+	return `${baseUrl}/login?${params.toString()}`;
 };
 
 // Function to handle Cognito callback and extract authorization code
