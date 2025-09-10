@@ -49,16 +49,16 @@ jobs:
           # Install dependencies
           npm run install:all
           
-          # Set up production environment variables
-          echo "REACT_APP_COGNITO_USER_POOL_ID=us-east-2_GOHDcj0J4" > client/.env.production
-          echo "REACT_APP_COGNITO_CLIENT_ID=v3be3ikb1s1d6eaaulkvbv5f1" >> client/.env.production
-          echo "REACT_APP_COGNITO_REGION=us-east-2" >> client/.env.production
-          echo "REACT_APP_COGNITO_DOMAIN=us-east-2gohdcj0j4.auth.us-east-2.amazoncognito.com" >> client/.env.production
-          echo "REACT_APP_COGNITO_REDIRECT_SIGNIN=https://lamhey.co/callback" >> client/.env.production
-          echo "REACT_APP_COGNITO_REDIRECT_SIGNOUT=https://lamhey.co/" >> client/.env.production
-          echo "REACT_APP_COGNITO_SCOPES=email openid phone" >> client/.env.production
-          echo "REACT_APP_COGNITO_RESPONSE_TYPE=code" >> client/.env.production
-          echo "REACT_APP_COGNITO_HOSTED_UI_URL=https://us-east-2gohdcj0j4.auth.us-east-2.amazoncognito.com/login?client_id=v3be3ikb1s1d6eaaulkvbv5f1&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Flamhey.co%2Fcallback" >> client/.env.production
+          # Set up environment variables (single .env approach)
+          echo "REACT_APP_COGNITO_USER_POOL_ID=us-east-2_GOHDcj0J4" > client/.env
+          echo "REACT_APP_COGNITO_CLIENT_ID=v3be3ikb1s1d6eaaulkvbv5f1" >> client/.env
+          echo "REACT_APP_COGNITO_REGION=us-east-2" >> client/.env
+          echo "REACT_APP_COGNITO_DOMAIN=us-east-2gohdcj0j4.auth.us-east-2.amazoncognito.com" >> client/.env
+          echo "REACT_APP_COGNITO_REDIRECT_SIGNIN=https://lamhey.co/callback" >> client/.env
+          echo "REACT_APP_COGNITO_REDIRECT_SIGNOUT=https://lamhey.co/" >> client/.env
+          echo "REACT_APP_COGNITO_SCOPES=email openid phone" >> client/.env
+          echo "REACT_APP_COGNITO_RESPONSE_TYPE=code" >> client/.env
+          echo "REACT_APP_COGNITO_HOSTED_UI_URL=https://us-east-2gohdcj0j4.auth.us-east-2.amazoncognito.com/login?client_id=v3be3ikb1s1d6eaaulkvbv5f1&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Flamhey.co%2Fcallback" >> client/.env
           
           # Build application
           npm run build:all
