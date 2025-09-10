@@ -44,8 +44,24 @@ jobs:
           # Add timestamp to force rebuild
           echo "BUILD_TIMESTAMP=$(date)" > client/.env.local
           echo "REACT_APP_BUILD_TIME=$(date +%s)" >> client/.env.local
-          npm run build:all
-          echo "Build completed"
+          echo "Starting build process..."
+          npm run build:all || {
+            echo "Build failed! Checking what went wrong..."
+            echo "Node version:"
+            node --version
+            echo "NPM version:"
+            npm --version
+            echo "Current directory:"
+            pwd
+            echo "Directory contents:"
+            ls -la
+            echo "Client directory contents:"
+            ls -la client/
+            echo "Trying to build client manually..."
+            cd client && npm run build
+            exit 1
+          }
+          echo "Build completed successfully"
           # Verify build files exist
           echo "Checking build files..."
           ls -la client/build/
