@@ -10,7 +10,8 @@
     "build": "cd client && npm run build",
     "start": "cd server && npm start",
     "install:all": "npm install && cd server && npm install && cd ../client && npm install",
-    "build:all": "npm run build && cd server && npm install --production"
+    "build:all": "npm run build && cd server && npm install --production",
+    "deploy": "npm run install:all && npm run build:all && npm start"
   },
   "keywords": ["react", "nodejs", "tailwind", "express", "ec2", "webapp"],
   "author": "Your Name",

@@ -3,8 +3,7 @@ name: Deploy to EC2
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -12,25 +11,45 @@ jobs:
     
     steps:
     - name: Deploy to EC2
-      uses: appleboy/ssh-action@v0.1.5
+      uses: appleboy/ssh-action@v1.0.3
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          cd /home/ubuntu/Lamhey
-          echo "Starting deployment..."
-          git pull origin main
-          echo "Git pull completed"
-          # Force complete rebuild
-          rm -rf client/build
-          rm -rf client/node_modules
-          rm -rf server/node_modules
-          rm -rf node_modules
-          echo "All caches cleared"
+          # Update system packages
+          sudo apt update -y
+          
+          # Install Node.js 18 if not present
+          if ! command -v node &> /dev/null || [ "$(node -v | cut -d'v' -f2 | cut -d'.' -f1)" -lt "18" ]; then
+            curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+          fi
+          
+          # Install PM2 if not present
+          if ! command -v pm2 &> /dev/null; then
+            sudo npm install -g pm2
+          fi
+          
+          # Install Nginx if not present
+          if ! command -v nginx &> /dev/null; then
+            sudo apt install -y nginx
+          fi
+          
+          # Navigate to application directory
+          cd /home/ubuntu
+          
+          # Remove existing deployment
+          sudo rm -rf Lamhey
+          
+          # Clone latest code
+          git clone https://github.com/neelkamalrana/Lamhey.git
+          cd Lamhey
+          
+          # Install dependencies
           npm run install:all
-          echo "Dependencies installed"
-          # Set production environment variables for Cognito
+          
+          # Set up production environment variables
           echo "REACT_APP_COGNITO_USER_POOL_ID=us-east-2_GOHDcj0J4" > client/.env.production
           echo "REACT_APP_COGNITO_CLIENT_ID=v3be3ikb1s1d6eaaulkvbv5f1" >> client/.env.production
           echo "REACT_APP_COGNITO_REGION=us-east-2" >> client/.env.production
@@ -40,38 +59,38 @@ jobs:
           echo "REACT_APP_COGNITO_SCOPES=email openid phone" >> client/.env.production
           echo "REACT_APP_COGNITO_RESPONSE_TYPE=code" >> client/.env.production
           echo "REACT_APP_COGNITO_HOSTED_UI_URL=https://us-east-2gohdcj0j4.auth.us-east-2.amazoncognito.com/login?client_id=v3be3ikb1s1d6eaaulkvbv5f1&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Flamhey.co%2Fcallback" >> client/.env.production
-          echo "Production environment variables set"
-          # Add timestamp to force rebuild
-          echo "BUILD_TIMESTAMP=$(date)" > client/.env.local
-          echo "REACT_APP_BUILD_TIME=$(date +%s)" >> client/.env.local
+          
+          # Build application
           npm run build:all
-          echo "Build completed"
-          # Verify build files exist
-          echo "Checking build files..."
-          ls -la client/build/
-          echo "Build files listed"
-          # Check if index.html exists
-          if [ -f "client/build/index.html" ]; then
-            echo "✅ index.html exists"
+          
+          # Configure Nginx
+          sudo cp nginx.conf /etc/nginx/nginx.conf
+          sudo nginx -t
+          sudo systemctl restart nginx
+          sudo systemctl enable nginx
+          
+          # Stop existing PM2 processes
+          pm2 stop all 2>/dev/null || true
+          pm2 delete all 2>/dev/null || true
+          
+          # Start application with PM2
+          pm2 start server/server.js --name "lamhey" --env production
+          pm2 startup
+          pm2 save
+          
+          # Configure firewall
+          sudo ufw allow 22 2>/dev/null || true
+          sudo ufw allow 80 2>/dev/null || true
+          sudo ufw allow 443 2>/dev/null || true
+          sudo ufw --force enable 2>/dev/null || true
+          
+          # Health check
+          sleep 5
+          if pm2 list | grep -q "lamhey.*online"; then
+            echo "✅ Deployment successful!"
+            echo "🌐 Application is running at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)"
           else
-            echo "❌ index.html missing!"
+            echo "❌ Deployment failed!"
+            pm2 logs lamhey --lines 20
             exit 1
           fi
-          # Check if profile feature is in the built files
-          echo "Checking for profile feature in built files..."
-          if grep -q "Profile" client/build/static/js/*.js; then
-            echo "✅ Profile feature found in built files"
-          else
-            echo "❌ Profile feature NOT found in built files!"
-          fi
-          pm2 restart lamhey
-          echo "PM2 restarted"
-          pm2 status
-          echo "PM2 status checked"
-          # Test if the app is serving correctly
-          echo "Testing application response..."
-          curl -s http://localhost:3001/api/health || echo "API health check failed"
-          echo "Application test completed"
-          sudo systemctl reload nginx
-          echo "Nginx reloaded"
-          echo "Deployment completed successfully!"
