@@ -68,7 +68,7 @@ if [ -d "lamhey" ]; then
     git pull origin main
 else
     print_status "Cloning repository..."
-    git clone https://github.com/yourusername/lamhey.git
+    git clone https://github.com/neelkamalrana/Lamhey.git
     cd lamhey
 fi
 
@@ -118,7 +118,7 @@ fi
 # Health check
 print_status "Performing health check..."
 sleep 5
-if curl -f http://localhost:5000/api/health > /dev/null 2>&1; then
+if curl -f http://localhost:3001/api/health > /dev/null 2>&1; then
     print_status "✅ Application is running successfully!"
     print_status "🌐 Access your app at: http://$(curl -s http://169.254.169.254/latest/meta-data/public-ipv4)"
 else
