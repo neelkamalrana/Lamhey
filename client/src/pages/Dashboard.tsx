@@ -47,7 +47,7 @@ const Dashboard: React.FC = () => {
         borderRadius: '8px',
         fontWeight: 'bold'
       }}>
-        🚧 TESTING MODE: Authentication disabled for debugging 🚧
+        🚧 TESTING MODE: Authentication disabled for debugging - VERSION 2 🚧
       </div>
       <header className="header">
         <h1 className="logo">Lamhey Dashboard</h1>
