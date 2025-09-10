@@ -12,7 +12,7 @@ export const cognitoConfig = {
 	hostedUIDomainHost: (env.REACT_APP_COGNITO_DOMAIN || '').replace(/^https?:\/\//, '').replace(/\/$/, ''),
 	hostedUIRedirectSignIn: env.REACT_APP_COGNITO_REDIRECT_SIGNIN || 'http://localhost:3000/dashboard',
 	hostedUIRedirectSignOut: env.REACT_APP_COGNITO_REDIRECT_SIGNOUT || 'http://localhost:3000/',
-	scope: (env.REACT_APP_COGNITO_SCOPES || 'email openid profile').split(/[ ,]+/).filter(Boolean),
+	scope: (env.REACT_APP_COGNITO_SCOPES || 'email openid').split(/[ ,]+/).filter(Boolean),
 	responseType: env.REACT_APP_COGNITO_RESPONSE_TYPE || 'code',
 	// Direct URL for Cognito Hosted UI
 	hostedUIUrl: env.REACT_APP_COGNITO_HOSTED_UI_URL || '',
