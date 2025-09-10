@@ -62,14 +62,14 @@ if ! command -v pm2 &> /dev/null; then
 fi
 
 # Clone or update repository
-if [ -d "lamhey" ]; then
+if [ -d "Lamhey" ]; then
     print_status "Updating existing repository..."
-    cd lamhey
+    cd Lamhey
     git pull origin main
 else
     print_status "Cloning repository..."
     git clone https://github.com/neelkamalrana/Lamhey.git
-    cd lamhey
+    cd Lamhey
 fi
 
 # Install dependencies
