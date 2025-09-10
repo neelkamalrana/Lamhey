@@ -190,7 +190,7 @@ fi
 
 # Test API endpoint
 print_status "Testing API endpoint..."
-if curl -f http://localhost:3001/api/health > /dev/null 2>&1; then
+if curl -f http://localhost:3000/api/health > /dev/null 2>&1; then
     print_status "✅ API health check passed"
 else
     print_warning "⚠️  API health check failed, but this might be normal if the API doesn't have a health endpoint"
