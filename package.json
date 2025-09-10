@@ -1,0 +1,25 @@
+{
+  "name": "lamhey",
+  "version": "1.0.0",
+  "description": "A modern web application with React frontend and Node.js backend",
+  "main": "server/server.js",
+  "scripts": {
+    "dev": "concurrently \"npm run server:dev\" \"npm run client:dev\"",
+    "server:dev": "cd server && npm run dev",
+    "client:dev": "cd client && npm start",
+    "build": "cd client && npm run build",
+    "start": "cd server && npm start",
+    "install:all": "npm install && cd server && npm install && cd ../client && npm install",
+    "build:all": "npm run build && cd server && npm install --production"
+  },
+  "keywords": ["react", "nodejs", "tailwind", "express", "ec2", "webapp"],
+  "author": "Your Name",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}
