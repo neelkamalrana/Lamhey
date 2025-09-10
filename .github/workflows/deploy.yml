@@ -22,11 +22,16 @@ jobs:
           echo "Starting deployment..."
           git pull origin main
           echo "Git pull completed"
-          # Clear only build cache, keep node_modules for faster installs
+          # Force complete rebuild
           rm -rf client/build
-          echo "Build cache cleared"
+          rm -rf client/node_modules
+          rm -rf server/node_modules
+          rm -rf node_modules
+          echo "All caches cleared"
           npm run install:all
           echo "Dependencies installed"
+          # Add timestamp to force rebuild
+          echo "BUILD_TIMESTAMP=$(date)" > client/.env.local
           npm run build:all
           echo "Build completed"
           pm2 restart lamhey
