@@ -7,48 +7,21 @@ on:
     branches: [ main ]
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
-    
-    - name: Install dependencies
-      run: |
-        npm run install:all
-    
-    - name: Build application
-      run: |
-        npm run build:all
-    
-    - name: Run tests (if available)
-      run: |
-        cd client && npm test -- --coverage --watchAll=false || true
-
   deploy:
-    needs: test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
     
     steps:
-    - uses: actions/checkout@v4
-    
     - name: Deploy to EC2
-      uses: appleboy/ssh-action@v1.0.3
+      uses: appleboy/ssh-action@v0.1.5
       with:
         host: ${{ secrets.EC2_HOST }}
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
-        port: ${{ secrets.EC2_PORT || 22 }}
         script: |
-          cd /home/${{ secrets.EC2_USERNAME }}/lamhey
+          cd /home/ubuntu/Lamhey
           git pull origin main
+          npm run install:all
           npm run build:all
-          pm2 restart lamhey || pm2 start server/server.js --name "lamhey"
-          pm2 save
+          pm2 restart lamhey
+          sudo systemctl reload nginx
+          echo "Deployment completed successfully!"

@@ -1,9 +1,11 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useAuth } from '../contexts/AuthContext';
 import Navigation from '../components/Navigation';
+import UserProfile from '../components/UserProfile';
 
 const Dashboard: React.FC = () => {
   const { user, isAuthenticated, isLoading } = useAuth();
+  const [activeTab, setActiveTab] = useState<'overview' | 'profile'>('overview');
 
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
@@ -40,6 +42,28 @@ const Dashboard: React.FC = () => {
             Manage your photos, explore features, and make the most of your Lamhey experience.
           </p>
         </div>
+
+        {/* Dashboard Tabs */}
+        <div className="dashboard-tabs">
+          <button 
+            className={`tab-button ${activeTab === 'overview' ? 'active' : ''}`}
+            onClick={() => setActiveTab('overview')}
+          >
+            Overview
+          </button>
+          <button 
+            className={`tab-button ${activeTab === 'profile' ? 'active' : ''}`}
+            onClick={() => setActiveTab('profile')}
+          >
+            Profile
+          </button>
+        </div>
+
+        {/* Tab Content */}
+        {activeTab === 'profile' ? (
+          <UserProfile />
+        ) : (
+          <div className="dashboard-content">
 
         {/* Quick Stats */}
         <div className="stats-grid">
@@ -154,6 +178,8 @@ const Dashboard: React.FC = () => {
             </div>
           </div>
         </div>
+          </div>
+        )}
       </main>
 
       <footer className="footer">
