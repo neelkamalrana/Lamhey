@@ -45,10 +45,21 @@ jobs:
             echo "❌ index.html missing!"
             exit 1
           fi
+          # Check if profile feature is in the built files
+          echo "Checking for profile feature in built files..."
+          if grep -q "Profile" client/build/static/js/*.js; then
+            echo "✅ Profile feature found in built files"
+          else
+            echo "❌ Profile feature NOT found in built files!"
+          fi
           pm2 restart lamhey
           echo "PM2 restarted"
           pm2 status
           echo "PM2 status checked"
+          # Test if the app is serving correctly
+          echo "Testing application response..."
+          curl -s http://localhost:3001/api/health || echo "API health check failed"
+          echo "Application test completed"
           sudo systemctl reload nginx
           echo "Nginx reloaded"
           echo "Deployment completed successfully!"
