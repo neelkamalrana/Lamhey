@@ -58,10 +58,16 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   useEffect(() => {
     const checkAuth = () => {
       try {
-        if (isAuthenticated()) {
+        console.log('AuthContext: Checking authentication...');
+        const authStatus = isAuthenticated();
+        console.log('AuthContext: isAuthenticated =', authStatus);
+        
+        if (authStatus) {
           const userData = getCurrentUser();
+          console.log('AuthContext: User data =', userData);
           setUser(userData);
         } else {
+          console.log('AuthContext: No user authenticated');
           setUser(null);
         }
       } catch (error) {

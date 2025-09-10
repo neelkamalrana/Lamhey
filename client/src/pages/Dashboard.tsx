@@ -7,6 +7,9 @@ const Dashboard: React.FC = () => {
   const { user, isAuthenticated, isLoading } = useAuth();
   const [activeTab, setActiveTab] = useState<'overview' | 'profile'>('overview');
 
+  // Debug logging
+  console.log('Dashboard render:', { user, isAuthenticated, isLoading });
+
   useEffect(() => {
     if (!isLoading && !isAuthenticated) {
       window.location.href = '/';
