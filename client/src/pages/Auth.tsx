@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Navigation from '../components/Navigation';
 
 const AuthPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
@@ -60,10 +61,7 @@ const AuthPage: React.FC = () => {
     <div className="container">
       <header className="header">
         <h1 className="logo">Lamhey</h1>
-        <nav className="nav">
-          <a href="/about" className="nav-link">About</a>
-          <a href="/auth" className="nav-link active">Login/SignUp</a>
-        </nav>
+        <Navigation currentPage="auth" />
       </header>
 
       <main className="main">

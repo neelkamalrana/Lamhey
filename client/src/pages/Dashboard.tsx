@@ -1,35 +1,17 @@
-import React, { useState, useEffect } from 'react';
-import { getCurrentUser, signOut, isAuthenticated } from '../config/cognito';
+import React, { useEffect } from 'react';
+import { useAuth } from '../contexts/AuthContext';
+import Navigation from '../components/Navigation';
 
 const Dashboard: React.FC = () => {
-  const [user, setUser] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const { user, isAuthenticated, isLoading } = useAuth();
 
   useEffect(() => {
-    const checkAuth = () => {
-      try {
-        if (isAuthenticated()) {
-          const userData = getCurrentUser();
-          setUser(userData);
-        } else {
-          window.location.href = '/';
-        }
-      } catch (error) {
-        console.error('User not authenticated:', error);
-        window.location.href = '/';
-      } finally {
-        setLoading(false);
-      }
-    };
+    if (!isLoading && !isAuthenticated) {
+      window.location.href = '/';
+    }
+  }, [isAuthenticated, isLoading]);
 
-    checkAuth();
-  }, []);
-
-  const handleSignOut = () => {
-    signOut();
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="container">
         <div className="loading-container">
@@ -40,16 +22,15 @@ const Dashboard: React.FC = () => {
     );
   }
 
+  if (!isAuthenticated) {
+    return null; // Will redirect via useEffect
+  }
+
   return (
     <div className="container">
       <header className="header">
         <h1 className="logo">Lamhey Dashboard</h1>
-        <nav className="nav">
-          <a href="/about" className="nav-link">About</a>
-          <button onClick={handleSignOut} className="btn btn-secondary">
-            Sign Out
-          </button>
-        </nav>
+        <Navigation currentPage="dashboard" />
       </header>
 
       <main className="main">

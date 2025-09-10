@@ -1,21 +1,12 @@
 import React from 'react';
-import { getCognitoHostedUIUrl } from '../config/cognito';
+import Navigation from '../components/Navigation';
 
 const About: React.FC = () => {
   return (
     <div className="container">
       <header className="header">
         <h1 className="logo">Lamhey</h1>
-        <nav className="nav">
-          <a href="/about" className="nav-link active">About</a>
-          <a href="/auth" className="nav-link" onClick={(e) => { 
-            e.preventDefault(); 
-            const url = getCognitoHostedUIUrl();
-            if (url) {
-              window.location.href = url;
-            }
-          }}>Login/SignUp</a>
-        </nav>
+        <Navigation currentPage="about" />
       </header>
 
       <main className="main">

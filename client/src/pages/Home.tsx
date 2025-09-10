@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getCognitoHostedUIUrl } from '../config/cognito';
+import Navigation from '../components/Navigation';
 
 interface HealthData {
   status: string;
@@ -67,16 +67,7 @@ const Home: React.FC = () => {
       {/* Header */}
       <header className="header">
         <h1 className="logo">Lamhey</h1>
-        <nav className="nav">
-          <a href="/about" className="nav-link">About</a>
-          <a href="/auth" className="nav-link" onClick={(e) => { 
-            e.preventDefault(); 
-            const url = getCognitoHostedUIUrl();
-            if (url) {
-              window.location.href = url;
-            }
-          }}>Login/SignUp</a>
-        </nav>
+        <Navigation currentPage="home" />
       </header>
 
       {/* Main Content */}

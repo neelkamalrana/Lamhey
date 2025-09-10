@@ -1,9 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { handleCognitoCallback, createMockUser } from '../config/cognito';
+import { useAuth } from '../contexts/AuthContext';
+import Navigation from '../components/Navigation';
 
 const Callback: React.FC = () => {
   const [status, setStatus] = useState<'processing' | 'success' | 'error'>('processing');
   const [message, setMessage] = useState('Processing authentication...');
+  const { refreshUser } = useAuth();
 
   useEffect(() => {
     const processCallback = async () => {
@@ -16,6 +19,9 @@ const Callback: React.FC = () => {
           
           // Create mock user data using the auth code
           createMockUser(result.code);
+          
+          // Refresh the authentication context
+          refreshUser();
           
           // Redirect to dashboard after a short delay
           setTimeout(() => {
@@ -42,16 +48,13 @@ const Callback: React.FC = () => {
     };
 
     processCallback();
-  }, []);
+  }, [refreshUser]);
 
   return (
     <div className="container">
       <header className="header">
         <h1 className="logo">Lamhey</h1>
-        <nav className="nav">
-          <a href="/about" className="nav-link">About</a>
-          <a href="/auth" className="nav-link">Login/SignUp</a>
-        </nav>
+        <Navigation />
       </header>
 
       <main className="main">
