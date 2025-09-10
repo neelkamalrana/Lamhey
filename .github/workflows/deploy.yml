@@ -35,11 +35,11 @@ jobs:
           echo "REACT_APP_COGNITO_CLIENT_ID=v3be3ikb1s1d6eaaulkvbv5f1" >> client/.env.production
           echo "REACT_APP_COGNITO_REGION=us-east-2" >> client/.env.production
           echo "REACT_APP_COGNITO_DOMAIN=us-east-2gohdcj0j4.auth.us-east-2.amazoncognito.com" >> client/.env.production
-          echo "REACT_APP_COGNITO_REDIRECT_SIGNIN=https://lamhey.co/dashboard" >> client/.env.production
+          echo "REACT_APP_COGNITO_REDIRECT_SIGNIN=https://lamhey.co/callback" >> client/.env.production
           echo "REACT_APP_COGNITO_REDIRECT_SIGNOUT=https://lamhey.co/" >> client/.env.production
           echo "REACT_APP_COGNITO_SCOPES=email openid phone" >> client/.env.production
           echo "REACT_APP_COGNITO_RESPONSE_TYPE=code" >> client/.env.production
-          echo "REACT_APP_COGNITO_HOSTED_UI_URL=https://us-east-2gohdcj0j4.auth.us-east-2.amazoncognito.com/login?client_id=v3be3ikb1s1d6eaaulkvbv5f1&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Flamhey.co%2Fdashboard" >> client/.env.production
+          echo "REACT_APP_COGNITO_HOSTED_UI_URL=https://us-east-2gohdcj0j4.auth.us-east-2.amazoncognito.com/login?client_id=v3be3ikb1s1d6eaaulkvbv5f1&response_type=code&scope=email+openid+phone&redirect_uri=https%3A%2F%2Flamhey.co%2Fcallback" >> client/.env.production
           echo "Production environment variables set"
           # Add timestamp to force rebuild
           echo "BUILD_TIMESTAMP=$(date)" > client/.env.local

@@ -13,11 +13,9 @@ const Dashboard: React.FC = () => {
   console.log('localStorage cognito_user:', localStorage.getItem('cognito_user'));
 
   useEffect(() => {
-    // Temporarily disable redirect for debugging
-    console.log('Dashboard useEffect:', { isLoading, isAuthenticated });
-    // if (!isLoading && !isAuthenticated) {
-    //   window.location.href = '/';
-    // }
+    if (!isLoading && !isAuthenticated) {
+      window.location.href = '/';
+    }
   }, [isAuthenticated, isLoading]);
 
   if (isLoading) {
@@ -31,10 +29,9 @@ const Dashboard: React.FC = () => {
     );
   }
 
-  // Temporarily show dashboard even if not authenticated for debugging
-  // if (!isAuthenticated) {
-  //   return null; // Will redirect via useEffect
-  // }
+  if (!isAuthenticated) {
+    return null; // Will redirect via useEffect
+  }
 
   return (
     <div className="container">
@@ -69,11 +66,7 @@ const Dashboard: React.FC = () => {
 
                {/* Tab Content */}
                {activeTab === 'profile' ? (
-                 <div>
-                   <h3>Profile Tab Test</h3>
-                   <p>This is a test to see if the profile tab is working.</p>
-                   <UserProfile />
-                 </div>
+                 <UserProfile />
                ) : (
           <div className="dashboard-content">
 
