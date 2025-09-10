@@ -75,7 +75,7 @@ const Home: React.FC = () => {
         {/* Hero Section */}
         <section className="hero">
           <h2 className="hero-title">
-            Welcome to Lamhey - VERSION 5
+            Welcome to Lamhey
           </h2>
           <p className="hero-description">
             A modern web application built with React and Node.js. 
