@@ -9,6 +9,8 @@ const Dashboard: React.FC = () => {
 
   // Debug logging
   console.log('Dashboard render:', { user, isAuthenticated, isLoading });
+  console.log('localStorage cognito_auth_code:', localStorage.getItem('cognito_auth_code'));
+  console.log('localStorage cognito_user:', localStorage.getItem('cognito_user'));
 
   useEffect(() => {
     // Temporarily disable redirect for debugging
@@ -65,10 +67,14 @@ const Dashboard: React.FC = () => {
           </button>
         </div>
 
-        {/* Tab Content */}
-        {activeTab === 'profile' ? (
-          <UserProfile />
-        ) : (
+               {/* Tab Content */}
+               {activeTab === 'profile' ? (
+                 <div>
+                   <h3>Profile Tab Test</h3>
+                   <p>This is a test to see if the profile tab is working.</p>
+                   <UserProfile />
+                 </div>
+               ) : (
           <div className="dashboard-content">
 
         {/* Quick Stats */}
