@@ -75,11 +75,11 @@ const Home: React.FC = () => {
         {/* Hero Section */}
         <section className="hero">
           <h2 className="hero-title">
-            Welcome to Lamhey - Deployed! 🚀
+            Welcome to Lamhey! 🚀
           </h2>
           <p className="hero-description">
             A modern web application built with React and Node.js. 
-            Optimized for EC2 deployment with GitHub integration and seamless development workflows.
+            Optimized for local development with AWS Cognito authentication and seamless workflows.
           </p>
           <div className="hero-buttons">
             <button
@@ -212,7 +212,7 @@ const Home: React.FC = () => {
 
       {/* Footer */}
       <footer className="footer">
-        <p>&copy; 2024 Lamhey. Built with ❤️ for EC2 deployment.</p>
+        <p>&copy; 2024 Lamhey. Built with ❤️ for local development.</p>
       </footer>
     </div>
   );

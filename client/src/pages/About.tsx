@@ -30,8 +30,8 @@ const About: React.FC = () => {
                 content sharing, and collaborative features.
               </p>
               <p>
-                Our application is specifically optimized for cloud deployment on AWS EC2, ensuring 
-                high availability, scalability, and security for all our users. Whether you're an 
+                Our application is specifically optimized for local development with AWS Cognito authentication, ensuring 
+                security and seamless user experience for all our users. Whether you're an 
                 individual looking to organize your photos or a team needing collaborative tools, 
                 Lamhey provides the perfect solution.
               </p>
@@ -61,16 +61,13 @@ const About: React.FC = () => {
                   <strong>Backend:</strong> Node.js, Express.js, RESTful APIs
                 </div>
                 <div className="tech-item">
-                  <strong>Authentication:</strong> Amazon Cognito
+                  <strong>Authentication:</strong> AWS Cognito, OAuth 2.0
                 </div>
                 <div className="tech-item">
                   <strong>Storage:</strong> AWS S3, CloudFront CDN
                 </div>
                 <div className="tech-item">
-                  <strong>Deployment:</strong> AWS EC2, Docker, Nginx
-                </div>
-                <div className="tech-item">
-                  <strong>CI/CD:</strong> GitHub Actions, Automated Deployment
+                  <strong>Development:</strong> Hot Reload, TypeScript, ESLint
                 </div>
               </div>
             </div>
@@ -121,11 +118,11 @@ const About: React.FC = () => {
                   </ul>
                 </div>
                 <div className="skill-category">
-                  <h5>Cloud & DevOps</h5>
+                  <h5>Cloud & Development</h5>
                   <ul>
-                    <li>AWS (EC2, S3, Cognito, Lambda)</li>
-                    <li>Docker, Kubernetes</li>
-                    <li>CI/CD Pipelines</li>
+                    <li>AWS (Cognito, S3, Lambda)</li>
+                    <li>Local Development Tools</li>
+                    <li>Version Control (Git)</li>
                     <li>Infrastructure as Code</li>
                   </ul>
                 </div>
