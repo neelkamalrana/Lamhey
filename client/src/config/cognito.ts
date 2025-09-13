@@ -10,7 +10,7 @@ export const cognitoConfig = {
 	// Full hosted UI domain host. Example: lamhey-auth.auth.us-east-2.amazoncognito.com
 	// If you configured a custom domain, put that full host here.
 	hostedUIDomainHost: (env.REACT_APP_COGNITO_DOMAIN || '').replace(/^https?:\/\//, '').replace(/\/$/, ''),
-	hostedUIRedirectSignIn: env.REACT_APP_COGNITO_REDIRECT_SIGNIN || 'http://localhost:3000/dashboard',
+	hostedUIRedirectSignIn: env.REACT_APP_COGNITO_REDIRECT_SIGNIN || 'http://localhost:3000/callback',
 	hostedUIRedirectSignOut: env.REACT_APP_COGNITO_REDIRECT_SIGNOUT || 'http://localhost:3000/',
 	scope: (env.REACT_APP_COGNITO_SCOPES || 'email openid').split(/[ ,]+/).filter(Boolean),
 	responseType: env.REACT_APP_COGNITO_RESPONSE_TYPE || 'code',
@@ -18,17 +18,6 @@ export const cognitoConfig = {
 	hostedUIUrl: env.REACT_APP_COGNITO_HOSTED_UI_URL || '',
 };
 
-function resolveHostedBaseUrl(): string {
-	// Prefer explicit domain host if provided
-	if (cognitoConfig.hostedUIDomainHost) {
-		return `https://${cognitoConfig.hostedUIDomainHost}`;
-	}
-	// Fallback: derive from userPoolId and region (note: this is not always correct; domain uses a prefix, not pool id)
-	if (cognitoConfig.userPoolId && cognitoConfig.region) {
-		return `https://${cognitoConfig.userPoolId}.auth.${cognitoConfig.region}.amazoncognito.com`;
-	}
-	return '';
-}
 
 // Function to get Cognito Hosted UI URL
 export const getCognitoHostedUIUrl = (): string => {

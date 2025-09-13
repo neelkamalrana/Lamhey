@@ -33,8 +33,10 @@ app.use(morgan('combined'));
 app.use(express.json({ limit: '10mb' }));
 app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
-// Serve static files from React build
-app.use(express.static(path.join(__dirname, '../client/build')));
+// Serve static files from React build (only in production)
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '../client/build')));
+}
 
 // API Routes
 app.get('/api/health', (req, res) => {
@@ -59,8 +61,8 @@ app.get('/api/info', (req, res) => {
     features: [
       'React + Tailwind CSS Frontend',
       'Express.js Backend',
-      'EC2 Deployment Ready',
-      'GitHub Integration',
+      'AWS Cognito Authentication',
+      'Local Development Ready',
       'Security Headers',
       'Rate Limiting'
     ]
@@ -80,10 +82,12 @@ app.get('/api/data', (req, res) => {
   });
 });
 
-// Catch all handler: send back React's index.html file for client-side routing
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
-});
+// Catch all handler: send back React's index.html file for client-side routing (only in production)
+if (process.env.NODE_ENV === 'production') {
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '../client/build', 'index.html'));
+  });
+}
 
 // Error handling middleware
 app.use((err, req, res, next) => {
@@ -95,10 +99,14 @@ app.use((err, req, res, next) => {
 });
 
 // Start server
-app.listen(PORT, '0.0.0.0', () => {
+const host = process.env.NODE_ENV === 'production' ? '0.0.0.0' : 'localhost';
+app.listen(PORT, host, () => {
   console.log(`🚀 Lamhey server running on port ${PORT}`);
   console.log(`📱 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🌐 Access your app at: http://localhost:${PORT}`);
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(`🔧 Development mode: Frontend runs on React dev server`);
+  }
 });
 
 // Graceful shutdown

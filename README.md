@@ -1,15 +1,15 @@
 # Lamhey
 
-A modern web application built with React, Tailwind CSS, and Node.js, optimized for EC2 deployment with GitHub integration.
+A modern web application built with React, Tailwind CSS, and Node.js, configured for local development with AWS Cognito authentication.
 
 ## 🚀 Features
 
 - **Frontend**: React 18 with TypeScript and Tailwind CSS
 - **Backend**: Node.js with Express.js
+- **Authentication**: AWS Cognito integration
 - **Security**: Helmet.js, CORS, Rate Limiting
 - **Development**: Hot reload, TypeScript support
-- **Deployment**: EC2 ready with production optimizations
-- **CI/CD**: GitHub Actions integration ready
+- **Local Development**: Optimized for localhost development
 
 ## 📁 Project Structure
 
@@ -61,14 +61,42 @@ lamhey/
 
 ## 🚀 Development
 
-### Start both frontend and backend in development mode
-```bash
-npm run dev
-```
+### Prerequisites
+
+- Node.js (>= 18.0.0)
+- npm (>= 8.0.0)
+- AWS Cognito User Pool configured
+
+### Quick Start
+
+1. **Install dependencies:**
+   ```bash
+   npm run setup
+   ```
+
+2. **Configure Cognito:**
+   
+   Create a `.env.local` file in the `client` directory:
+   ```bash
+   # AWS Cognito Configuration
+   REACT_APP_COGNITO_USER_POOL_ID=your_user_pool_id_here
+   REACT_APP_COGNITO_CLIENT_ID=your_client_id_here
+   REACT_APP_COGNITO_REGION=your_region_here
+   REACT_APP_COGNITO_DOMAIN=your_cognito_domain_here
+   REACT_APP_COGNITO_REDIRECT_SIGNIN=http://localhost:3000/callback
+   REACT_APP_COGNITO_REDIRECT_SIGNOUT=http://localhost:3000/
+   REACT_APP_COGNITO_SCOPES=email openid
+   REACT_APP_COGNITO_RESPONSE_TYPE=code
+   ```
+
+3. **Start development servers:**
+   ```bash
+   npm run dev
+   ```
 
 This will start:
 - React development server on `http://localhost:3000`
-- Express server on `http://localhost:5000`
+- Express server on `http://localhost:3000` (API routes)
 
 ### Start services individually
 
@@ -82,22 +110,13 @@ npm run client:dev
 npm run server:dev
 ```
 
-## 🏗️ Building for Production
+## 🔧 Available Scripts
 
-1. **Build the React app**
-   ```bash
-   npm run build
-   ```
-
-2. **Install production dependencies**
-   ```bash
-   npm run build:all
-   ```
-
-3. **Start the production server**
-   ```bash
-   npm start
-   ```
+- `npm run dev` - Start both frontend and backend in development mode
+- `npm run client:dev` - Start only the frontend
+- `npm run server:dev` - Start only the backend
+- `npm run setup` - Install all dependencies
+- `npm run clean` - Clean all node_modules and build artifacts
 
 ## 🌐 API Endpoints
 
@@ -105,184 +124,52 @@ npm run server:dev
 - `GET /api/info` - Application information
 - `GET /api/data` - Sample data endpoint
 
-## 🚀 EC2 Deployment
+## 🔐 AWS Cognito Setup
 
-### 1. Launch EC2 Instance
+### 1. Create Cognito User Pool
 
-- Choose Amazon Linux 2 or Ubuntu 20.04 LTS
-- Select t2.micro (free tier) or larger
-- Configure security group to allow:
-  - SSH (port 22)
-  - HTTP (port 80)
-  - HTTPS (port 443)
-  - Custom TCP (port 5000 for development)
+1. Go to AWS Cognito Console
+2. Click "Create user pool"
+3. Choose "Cognito user pool" (not hosted UI)
+4. Configure sign-in options (email, username, etc.)
+5. Set password policy
+6. Configure MFA (optional)
+7. Review and create
 
-### 2. Connect to EC2 Instance
+### 2. Create App Client
 
-```bash
-ssh -i your-key.pem ec2-user@your-ec2-ip
-```
+1. In your User Pool, go to "App integration" tab
+2. Click "Create app client"
+3. Choose "Public client" (for web apps)
+4. Configure OAuth flows:
+   - ✅ Authorization code grant
+   - ✅ Implicit grant (if needed)
+5. Set callback URLs:
+   - `http://localhost:3000/callback`
+6. Set sign-out URLs:
+   - `http://localhost:3000/`
+7. Configure OAuth scopes:
+   - ✅ email
+   - ✅ openid
+   - ✅ profile (optional)
 
-### 3. Install Node.js
+### 3. Configure Domain
 
-**For Amazon Linux 2:**
-```bash
-curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.0/install.sh | bash
-source ~/.bashrc
-nvm install 18
-nvm use 18
-```
+1. In "App integration" tab, click "Domain"
+2. Choose "Use a Cognito domain"
+3. Enter a unique domain name
+4. Save the domain (e.g., `your-app-name.auth.us-east-1.amazoncognito.com`)
 
-**For Ubuntu:**
-```bash
-curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-sudo apt-get install -y nodejs
-```
+### 4. Update Environment Variables
 
-### 4. Install Git and Clone Repository
-
-```bash
-sudo yum install git -y  # Amazon Linux
-# or
-sudo apt install git -y  # Ubuntu
-
-git clone <your-repo-url>
-cd lamhey
-```
-
-### 5. Install Dependencies and Build
+Copy the following values from your Cognito setup:
 
 ```bash
-npm run install:all
-npm run build:all
-```
-
-### 6. Set up Environment Variables
-
-```bash
-cd server
-cp env.example .env
-nano .env  # Edit with production values
-```
-
-### 7. Install PM2 for Process Management
-
-```bash
-npm install -g pm2
-```
-
-### 8. Start the Application
-
-```bash
-pm2 start server.js --name "lamhey"
-pm2 startup
-pm2 save
-```
-
-### 9. Set up Nginx (Optional but Recommended)
-
-```bash
-sudo yum install nginx -y  # Amazon Linux
-# or
-sudo apt install nginx -y  # Ubuntu
-
-sudo systemctl start nginx
-sudo systemctl enable nginx
-```
-
-Create Nginx configuration:
-```bash
-sudo nano /etc/nginx/conf.d/lamhey.conf
-```
-
-Add the following configuration:
-```nginx
-server {
-    listen 80;
-    server_name your-domain.com;
-
-    location / {
-        proxy_pass http://localhost:5000;
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection 'upgrade';
-        proxy_set_header Host $host;
-        proxy_set_header X-Real-IP $remote_addr;
-        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto $scheme;
-        proxy_cache_bypass $http_upgrade;
-    }
-}
-```
-
-Restart Nginx:
-```bash
-sudo systemctl restart nginx
-```
-
-## 🔧 Environment Variables
-
-Create a `.env` file in the `server` directory:
-
-```env
-# Server Configuration
-PORT=5000
-NODE_ENV=production
-
-# Client Configuration
-CLIENT_URL=http://your-domain.com
-
-# Security
-ALLOWED_ORIGINS=http://your-domain.com,https://your-domain.com
-```
-
-## 📝 GitHub Integration
-
-### 1. Create GitHub Repository
-
-1. Go to GitHub and create a new repository
-2. Copy the repository URL
-
-### 2. Initialize Git and Push
-
-```bash
-git init
-git add .
-git commit -m "Initial commit"
-git branch -M main
-git remote add origin <your-repo-url>
-git push -u origin main
-```
-
-### 3. Set up GitHub Actions (Optional)
-
-Create `.github/workflows/deploy.yml`:
-
-```yaml
-name: Deploy to EC2
-
-on:
-  push:
-    branches: [ main ]
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v3
-    
-    - name: Deploy to EC2
-      uses: appleboy/ssh-action@v0.1.5
-      with:
-        host: ${{ secrets.EC2_HOST }}
-        username: ${{ secrets.EC2_USERNAME }}
-        key: ${{ secrets.EC2_SSH_KEY }}
-        script: |
-          cd /path/to/lamhey
-          git pull origin main
-          npm run build:all
-          pm2 restart lamhey
+# In client/.env.local
+REACT_APP_COGNITO_USER_POOL_ID=us-east-1_XXXXXXXXX
+REACT_APP_COGNITO_CLIENT_ID=your_client_id_here
+REACT_APP_COGNITO_REGION=us-east-1
+REACT_APP_COGNITO_DOMAIN=your-app-name.auth.us-east-1.amazoncognito.com
 ```
 
 ## 🧪 Testing
@@ -297,30 +184,13 @@ cd server
 npm test
 ```
 
-## 📊 Monitoring
-
-### PM2 Commands
-
-```bash
-pm2 status          # Check status
-pm2 logs lamhey     # View logs
-pm2 restart lamhey  # Restart app
-pm2 stop lamhey     # Stop app
-pm2 delete lamhey   # Delete app
-```
-
-### Health Check
-
-Visit `http://your-ec2-ip:5000/api/health` to check if the application is running.
-
 ## 🔒 Security Considerations
 
-- Change default SSH port
-- Use SSH keys instead of passwords
-- Configure firewall rules
-- Use HTTPS in production
 - Keep dependencies updated
 - Use environment variables for sensitive data
+- Configure CORS properly for production
+- Use HTTPS in production
+- Validate all user inputs
 
 ## 🐛 Troubleshooting
 
@@ -328,17 +198,24 @@ Visit `http://your-ec2-ip:5000/api/health` to check if the application is runnin
 
 1. **Port already in use**
    ```bash
-   sudo lsof -i :5000
-   sudo kill -9 <PID>
+   lsof -i :3000
+   kill -9 <PID>
    ```
 
-2. **Permission denied**
-   ```bash
-   sudo chown -R $USER:$USER /path/to/lamhey
-   ```
+2. **Cognito authentication not working**
+   - Check your environment variables
+   - Verify callback URLs in Cognito console
+   - Ensure CORS is configured correctly
 
 3. **Node modules issues**
    ```bash
+   npm run clean
+   npm run setup
+   ```
+
+4. **React dev server not starting**
+   ```bash
+   cd client
    rm -rf node_modules package-lock.json
    npm install
    ```
@@ -361,6 +238,4 @@ If you have any questions or need help, please open an issue in the GitHub repos
 
 ---
 
-Built with ❤️ for EC2 deployment
-# Testing deployment with secrets
-# Force fresh deployment - Wed Sep 10 10:04:51 EDT 2025
+Built with ❤️ for local development
